@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Ronaldo Najera">
+    <meta name="Pablo Lucero">
+    <meta name="Anibal Trigueros">
+    <meta name="Mauricio Figueroa">
+    <title>INFINITY NEWS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="Imagenes/Logo.jpg" alt="Logo">
+    </div>
+    <div class="brand">
+        <h1>INFINITY NEWS</h1>
+        <p>El Universo de Información a tu Alcance...</p>
+    </div>
+    <div class="botones-menu">
+        <button onclick="scrollToSection('Inicio')">Inicio</button>
+        <button onclick="scrollToSection('deportes')">Deportes</button>
+        <button onclick="scrollToSection('tecnologia')">Tecnología</button>
+        <button onclick="scrollToSection('Current')">Noticias</button>
+        <button onclick="scrollToSection('clima')">Clima</button>
+    </div>
+</header>
+
+<main>
+    <section id="Inicio" class="Inicio">
+        <h2>Inicio</h2>
+        <p>Descubre las últimas noticias y novedades aquí. ¡No te lo pierdas!</p>
+        <div class="image-container">
+            <img class="Ultima-Hora" src="https://vskills.in/certification/blog/wp-content/uploads/2015/01/structure-of-a-news-report.jpg" alt="Imagen Noticia Ultima Hora">
+        </div>
+    </section>
+
+    <section id="deportes">
+        <h2>Deportes</h2>
+        <p>Todo sobre el mundo del deporte. ¡Mantente al tanto de los eventos más importantes!</p>
+        <div class="image-container">
+            <img src="Imagenes/Deportes.jpg" alt="Deportes">
+        </div>
+        
+        <div id="deportesNoticias" class="noticias-container">
+        </div>
+    </section>
+
+    <section id="tecnologia">
+        <h2>Tecnología</h2>
+        <p>Explora las últimas innovaciones tecnológicas y tendencias del mundo digital.</p>
+        <div class="image-container">
+            <img src="Imagenes/Tecnologia.jpg" alt="Tecnologia">
+        </div>
+        <div id="tecnologiaNoticias" class="noticias-container">
+        </div>
+    </section>
+
+    <section id="Current">
+        <h2>Noticias</h2>
+        <p>Explora el universo, obtén noticias con las publicaciones más populares y curiosas.</p>
+        <div class="image-container">
+            <img src="Imagenes/Current.jpg" alt="Imagen Noticias">
+        </div>
+        <div id="CurrentNoticias" class="noticias-container">
+        </div>
+    </section>
+
+    <section id="clima">
+        <h2>Clima</h2>
+        <div class="image-clima">
+            <img src="Imagenes/Clima.jpg" alt="Imangen de Clima">
+        </div>
+        <p>Consulta el clima actual en Guatemala.</p>
+        <div id="ciudadDeGuatemala" class="noticias-container">
+        </div>
+        <div id="jalapa" class="noticias-container">
+        </div>
+        <div id="regionNorte" class="noticias-container">
+        </div>
+        <div id="regionSur" class="noticias-container">
+        </div>
+        <div id="regionOccidente" class="noticias-container">
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div id="contacto">
+        <h3>Contactos</h3>
+        <p>Teléfono: 6770-6489</p>
+        <p>Correo electrónico: newsinfinity@gmail.com.gt</p>
+        <p>&copy; 2024.Todos los derechos reservados.</p>
+    </div>
+    <div class="redes-sociales">
+        <h3>Síguenos en redes sociales:</h3>
+        <ul>
+            <li><a href="https://www.facebook.com">Facebook</a></li>
+            <li><a href="https://twitter.com">Twitter</a></li>
+            <li><a href="https://www.instagram.com">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/es/">Tik tok</a></li>
+        </ul>
+    </div>
+</footer>
+
+<script>
+    function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function cargarNoticiasTecnologicas() {
+    const subreddit = 'technology';
+
+    try {
+        const response = await fetch(`https://www.reddit.com/r/${subreddit}/top.json?limit=5`);
+
+        if (!response.ok) {
+            throw new Error('Error al cargar datos desde la API de Reddit');
+        }
+
+        const data = await response.json();
+        const noticiasContainer = document.getElementById('tecnologiaNoticias');
+        noticiasContainer.innerHTML = '';
+
+        const posts = data.data.children;
+
+        posts.forEach(post => {
+            const articleElement = document.createElement('div');
+            articleElement.classList.add('noticia');
+
+            const title = post.data.title;
+            const description = post.data.selftext ? post.data.selftext : 'Click en leer más para mayor información';
+            const url = `https://www.reddit.com${post.data.permalink}`;
+
+            articleElement.innerHTML = `
+                <h3>${title}</h3>
+                <p>${description}</p>
+                <a href="${url}" target="_blank">Leer más</a>
+            `;
+            noticiasContainer.appendChild(articleElement);
+        });
+    } catch (error) {
+        console.error('Error al cargar datos desde la API de Reddit:', error);
+    }
+}
+
+window.addEventListener('load', () => {
+    cargarNoticiasTecnologicas(); 
+    setInterval(cargarNoticiasTecnologicas, 24 * 60 * 60 * 1000); 
+});
+
+
+async function cargarNoticiasDeportivas() {
+    const subreddit = 'sports'; 
+
+    try {
+        // Obtener posts del subreddit
+        const response = await fetch(`https://www.reddit.com/r/${subreddit}/top.json?limit=5`);
+
+        if (!response.ok) {
+            throw new Error('Error al cargar datos desde la API de Reddit');
+        }
+
+        const data = await response.json();
+        const noticiasContainer = document.getElementById('deportesNoticias');
+        noticiasContainer.innerHTML = '';
+
+        const posts = data.data.children;
+
+        posts.forEach(post => {
+            const articleElement = document.createElement('div');
+            articleElement.classList.add('noticia');
+
+            const title = post.data.title;
+            const description = post.data.selftext ? post.data.selftext : 'Click en leer más para mayor información';
+            const url = `https://www.reddit.com${post.data.permalink}`;
+
+            articleElement.innerHTML = `
+                <h3>${title}</h3>
+                <p>${description}</p>
+                <a href="${url}" target="_blank">Leer más</a>
+            `;
+            noticiasContainer.appendChild(articleElement);
+        });
+    } catch (error) {
+        console.error('Error al cargar datos desde la API de Reddit:', error);
+    }
+}
+
+window.addEventListener('load', () => {
+    cargarNoticiasDeportivas(); 
+    setInterval(cargarNoticiasDeportivas, 24 * 60 * 60 * 1000); 
+});
+
+    function cargarNoticiasCurrents() {
+        const apiKey = 'VEJJwIn4dhZEzMIBOH7dCWQEZE6BPdcq5TGA3GzIwriHXuPD';
+        fetch(`https://api.currentsapi.services/v1/latest-news?language=es&apiKey=${apiKey}`)
+            .then(response => response.json())
+            .then(data => {
+                const noticiasContainer = document.getElementById('CurrentNoticias');
+                noticiasContainer.innerHTML = ''; 
+
+                data.news.forEach(article => {
+                    const articleElement = document.createElement('div');
+                    articleElement.classList.add('noticia');
+                    articleElement.innerHTML = `
+                        <h3>${article.title}</h3>
+                        <p>${article.description}</p>
+                        <a href="${article.url}" target="_blank">Leer más</a>
+                    `;
+                    noticiasContainer.appendChild(articleElement);
+                });
+            })
+            .catch(error => console.error('Error al cargar noticias de Currents API:', error));
+    }
+
+
+function cargarClima(ciudad, contenedorId) {
+    const apiKey = '02a972ab5507abbd7378d5be3c842834'; 
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${ciudad},GT&units=metric&lang=es&appid=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+            const contenedor = document.getElementById(contenedorId);
+
+            contenedor.innerHTML = '';
+
+            const climaElemento = document.createElement('div');
+            climaElemento.classList.add('clima');
+            climaElemento.innerHTML = `
+                <h3>${data.name}, ${data.sys.country}</h3>
+                <p>Temperatura: ${data.main.temp}°C</p>
+                <p>Clima: ${data.weather[0].description}</p>
+                <p>Humedad: ${data.main.humidity}%</p>
+                <p>Viento: ${data.wind.speed} m/s</p>
+            `;
+            contenedor.appendChild(climaElemento);
+        })
+        .catch(error => console.error('Error al cargar información del clima:', error));
+}
+
+function cargarClimasRegiones() {
+    cargarClima('Ciudad de Guatemala', 'ciudadDeGuatemala');
+    cargarClima('Jalapa', 'jalapa');
+    cargarClima('Cobán', 'regionNorte'); 
+    cargarClima('Escuintla', 'regionSur'); 
+    cargarClima('Quetzaltenango', 'regionOccidente'); 
+}
+
+window.addEventListener('load', () => {
+    cargarClimasRegiones(); 
+    setInterval(cargarClimasRegiones, 30 * 60 * 1000); 
+
+    cargarNoticiasCurrents(); 
+    setInterval(cargarNoticiasCurrents, 24 * 60 * 60 * 1000); 
+});
+</script>
+</html>
